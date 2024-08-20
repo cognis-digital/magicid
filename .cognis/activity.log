@@ -2,3 +2,4 @@
 2024-06-23T18:56:16  feat(core): add pagination to large reports
 2024-07-24T13:13:23  docs(output): add a fast path for the common case
 2024-08-07T08:30:30  perf: micro-optimization
+2024-08-20T15:47:37  build(rules): add a --format json alias
