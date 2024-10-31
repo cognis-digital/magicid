@@ -6,3 +6,4 @@
 2024-09-03T10:04:44  build(rules): lower memory on big inputs
 2024-10-04T17:21:51  chore(tests): load rules lazily for faster startup
 2024-10-17T12:38:58  test: add edge case
+2024-10-31T19:55:05  ci(engine): respect .gitignore when walking
