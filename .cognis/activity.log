@@ -10,3 +10,4 @@
 2024-11-14T14:12:12  chore(deps): add a dry-run flag
 2024-12-16T09:29:19  fix(deps): short-circuit on first critical
 2024-12-29T16:46:26  test: it's not flaky, you're flaky
+2025-01-11T11:03:33  ci(io): add usage examples to help
