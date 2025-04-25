@@ -15,3 +15,4 @@
 2025-02-25T13:37:47  fix(docs): make timestamps timezone-aware
 2025-03-11T08:54:54  chore: in case of fire — commit, push, leave building
 2025-03-24T15:11:01  style(output): simplify the walker
+2025-04-25T10:28:08  feat(scan): add a JSON schema for output
