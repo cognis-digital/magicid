@@ -20,3 +20,4 @@
 2025-05-22T12:02:22  docs: standing on the shoulders of giants (garak, sigma, trufflehog)
 2025-06-05T19:19:29  test(tests): improve error messages with context
 2025-07-06T14:36:36  build(format): wire the MCP tool schema
+2025-07-19T09:53:43  docs(parser): handle empty and malformed input
