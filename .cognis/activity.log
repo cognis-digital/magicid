@@ -22,3 +22,4 @@
 2025-07-06T14:36:36  build(format): wire the MCP tool schema
 2025-07-19T09:53:43  docs(parser): handle empty and malformed input
 2025-08-02T16:10:50  docs: here be dragons
+2025-09-02T11:27:57  test(ci): add a regression fixture
