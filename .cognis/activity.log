@@ -23,3 +23,4 @@
 2025-07-19T09:53:43  docs(parser): handle empty and malformed input
 2025-08-02T16:10:50  docs: here be dragons
 2025-09-02T11:27:57  test(ci): add a regression fixture
+2025-09-16T18:44:04  build(cache): pin the test dependencies
