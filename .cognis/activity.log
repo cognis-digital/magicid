@@ -28,3 +28,4 @@
 2025-10-13T08:18:18  perf(docs): trim whitespace in parsed fields
 2025-11-14T15:35:25  perf(docs): handle CRLF line endings
 2025-11-27T10:52:32  ci(fixtures): add --fail-on threshold handling
+2025-12-11T17:09:39  fix(output): add pagination to large reports
