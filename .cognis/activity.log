@@ -33,3 +33,4 @@
 2026-01-24T19:43:53  fix: works on my machine (TM)
 2026-02-07T14:00:00  style(cli): assert exit codes in tests
 2026-02-21T09:17:07  feat(config): lower memory on big inputs
+2026-03-07T16:34:14  refactor(format): load rules lazily for faster startup
