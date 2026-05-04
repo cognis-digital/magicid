@@ -36,3 +36,4 @@
 2026-03-07T16:34:14  refactor(format): load rules lazily for faster startup
 2026-04-07T11:51:21  chore: one does not simply skip CI
 2026-04-20T18:08:28  style(parser): add type hints to the public API
+2026-05-04T13:25:35  feat(ci): dedupe overlapping findings
