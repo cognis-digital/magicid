@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: magicid, labels: { app: magicid } }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: magicid } }
+  template:
+    metadata: { labels: { app: magicid } }
+    spec:
+      containers:
+        - name: magicid
+          image: ghcr.io/cognis-digital/magicid:latest
+          ports: [{ containerPort: 8000 }]
+          resources:
+            requests: { cpu: "50m", memory: "64Mi" }
+            limits: { cpu: "500m", memory: "256Mi" }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: magicid }
+spec:
+  selector: { app: magicid }
+  ports: [{ port: 80, targetPort: 8000 }]
