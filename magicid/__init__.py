@@ -1,26 +1,11 @@
-"""MAGICID — identify true file types by magic bytes (beats extensions).
-
-Spirit of file/libmagic: know your bytes.
-"""
-from .core import (
-    Signature,
-    Identification,
-    SIGNATURES,
-    identify_bytes,
-    identify_file,
-    scan_paths,
-)
-
-TOOL_NAME = "magicid"
-TOOL_VERSION = "1.0.0"
-
-__all__ = [
-    "TOOL_NAME",
-    "TOOL_VERSION",
-    "Signature",
-    "Identification",
-    "SIGNATURES",
-    "identify_bytes",
-    "identify_file",
-    "scan_paths",
-]
+"""magicid — part of the Cognis Neural Suite."""
+try:  # re-export the tool's public API + identity from core
+    from magicid.core import *  # noqa: F401,F403
+except Exception:  # pragma: no cover
+    pass
+try:
+    from magicid.core import TOOL_NAME, TOOL_VERSION
+except Exception:  # pragma: no cover
+    TOOL_NAME = "magicid"
+    TOOL_VERSION = "0.1.0"
+__version__ = TOOL_VERSION
