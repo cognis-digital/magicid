@@ -36,9 +36,9 @@ Identify true file types by magic bytes (beats extensions) — without standing 
 <a name="features"></a>
 ## Features
 
-- ✅ Todo
-- ✅ Fixme
-- ✅ Xxx
+- ✅ Identify Bytes
+- ✅ Identify File
+- ✅ Scan Paths
 - ✅ Runs on Linux/macOS/Windows · Docker · devcontainer
 - ✅ Ports in Python, JavaScript, Go, and Rust (`ports/`)
 
