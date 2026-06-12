@@ -16,7 +16,7 @@
 </div>
 
 ```bash
-pip install cognis-magicid
+pip install "git+https://github.com/cognis-digital/magicid.git"
 magicid scan .            # → prioritized findings in seconds
 ```
 
@@ -48,7 +48,7 @@ Identify true file types by magic bytes (beats extensions) — without standing 
 ## Quick start
 
 ```bash
-pip install cognis-magicid
+pip install "git+https://github.com/cognis-digital/magicid.git"
 magicid --version
 magicid scan .                       # scan current project
 magicid scan . --format json         # machine-readable
