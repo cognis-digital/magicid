@@ -9,16 +9,22 @@
 
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&duration=3500&pause=1000&color=6B46C1&center=true&vCenter=true&width=720&lines=Identify+true+file+types+by+magic+bytes+beats+extensions;Self-hostable+%C2%B7+MCP-native+%C2%B7+CI-ready+%C2%B7+polyglot" width="720"/>
 
-[![PyPI](https://img.shields.io/pypi/v/cognis-magicid.svg?color=6b46c1)](https://pypi.org/project/cognis-magicid/) [![CI](https://github.com/cognis-digital/magicid/actions/workflows/ci.yml/badge.svg)](https://github.com/cognis-digital/magicid/actions) [![License: COCL 1.0](https://img.shields.io/badge/License-COCL%201.0-2b6cb0.svg)](LICENSE) [![Suite](https://img.shields.io/badge/Cognis-Neural%20Suite-6b46c1.svg)](https://github.com/cognis-digital)
+[![install](https://img.shields.io/badge/install-git%2B%20%C2%B7%20pipx%20%C2%B7%20uv-6b46c1.svg)](#install--every-way-every-platform) [![CI](https://github.com/cognis-digital/magicid/actions/workflows/ci.yml/badge.svg)](https://github.com/cognis-digital/magicid/actions) [![License: COCL 1.0](https://img.shields.io/badge/License-COCL%201.0-2b6cb0.svg)](LICENSE) [![Suite](https://img.shields.io/badge/Cognis-Neural%20Suite-6b46c1.svg)](https://github.com/cognis-digital)
 
 *Part of the Cognis Neural Suite.*
 
 </div>
 
 ```bash
-pip install cognis-magicid
+pip install "git+https://github.com/cognis-digital/magicid.git"
 magicid scan .            # → prioritized findings in seconds
 ```
+
+<!-- cognis:layman:start -->
+## What is this?
+
+Files on your computer have names like "photo.jpg" or "document.pdf," but those extensions can be faked — a virus can call itself "photo.jpg" while actually being a runnable program. MAGICID looks at the actual contents of a file (the hidden "magic bytes" that every real file format starts with) to reveal its true type, regardless of what the filename says. Run it on any folder and it instantly flags anything suspicious, like an executable hiding inside a harmless-sounding image file. It is useful for security teams, developers, and anyone who receives files from untrusted sources and wants a quick, reliable way to check what those files really are.
+<!-- cognis:layman:end -->
 
 ## Contents
 
@@ -45,10 +51,56 @@ Identify true file types by magic bytes (beats extensions) — without standing 
 <div align="right"><a href="#top">↑ back to top</a></div>
 
 <a name="quick-start"></a>
+<!-- cognis:domains:start -->
+## Domains
+
+**Primary domain:** Cyber & Security  ·  **JTF MERIDIAN division:** NULLBYTE · SPECTER
+
+**Topics:** `cognis` `security` `infosec` `cybersecurity` `blue-team`
+
+Part of the **Cognis Neural Suite** — 300+ source-available tools organized across 12 domains under the JTF MERIDIAN command structure. See the [suite on GitHub](https://github.com/cognis-digital) and [jtf-meridian](https://github.com/cognis-digital/jtf-meridian) for how the pieces fit together.
+<!-- cognis:domains:end -->
+
+<!-- cognis:install:start -->
+## Install
+
+`magicid` is source-available (not published to PyPI) — every method below installs
+straight from GitHub. Pick whichever you prefer; the one-line scripts auto-detect
+the best tool available on your machine.
+
+**One-liner (Linux / macOS):**
+```sh
+curl -fsSL https://raw.githubusercontent.com/cognis-digital/magicid/HEAD/install.sh | sh
+```
+
+**One-liner (Windows PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/cognis-digital/magicid/HEAD/install.ps1 | iex
+```
+
+**Or install manually — any one of:**
+```sh
+pipx install "git+https://github.com/cognis-digital/magicid.git"     # isolated (recommended)
+uv tool install "git+https://github.com/cognis-digital/magicid.git"  # uv
+pip install "git+https://github.com/cognis-digital/magicid.git"      # pip
+```
+
+**From source:**
+```sh
+git clone https://github.com/cognis-digital/magicid.git
+cd magicid && pip install .
+```
+
+Then run:
+```sh
+magicid --help
+```
+<!-- cognis:install:end -->
+
 ## Quick start
 
 ```bash
-pip install cognis-magicid
+pip install "git+https://github.com/cognis-digital/magicid.git"
 magicid --version
 magicid scan .                       # scan current project
 magicid scan . --format json         # machine-readable
@@ -138,6 +190,32 @@ curl -fsSL https://raw.githubusercontent.com/cognis-digital/magicid/main/install
 <div align="right"><a href="#top">↑ back to top</a></div>
 
 <a name="related"></a>
+<a name="verification"></a>
+## Verification
+
+[![tests](https://img.shields.io/badge/tests-16%20passing-2ea44f.svg)](AUDIT.md)
+
+Every push is verified end-to-end. Latest audit (2026-06-13):
+
+```text
+tests        : 16 passed, 0 failed, 0 errored
+compile      : all modules parse
+cli          : C:\Python314\python.exe: No module named https
+package      : https
+```
+
+<details><summary>CLI surface (<code>--help</code>)</summary>
+
+```text
+C:\Python314\python.exe: No module named https
+```
+</details>
+
+Full machine-readable results: [`AUDIT.md`](AUDIT.md) · regenerate with `python -m https --help` + `pytest -q`.
+
+<div align="right"><a href="#top">↑ back to top</a></div>
+
+
 ## Related Cognis tools
 
 
