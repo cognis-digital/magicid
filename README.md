@@ -20,6 +20,12 @@ pip install "git+https://github.com/cognis-digital/magicid.git"
 magicid scan .            # → prioritized findings in seconds
 ```
 
+<!-- cognis:layman:start -->
+## What is this?
+
+Files on your computer have names like "photo.jpg" or "document.pdf," but those extensions can be faked — a virus can call itself "photo.jpg" while actually being a runnable program. MAGICID looks at the actual contents of a file (the hidden "magic bytes" that every real file format starts with) to reveal its true type, regardless of what the filename says. Run it on any folder and it instantly flags anything suspicious, like an executable hiding inside a harmless-sounding image file. It is useful for security teams, developers, and anyone who receives files from untrusted sources and wants a quick, reliable way to check what those files really are.
+<!-- cognis:layman:end -->
+
 ## Contents
 
 - [Why magicid?](#why) · [Features](#features) · [Quick start](#quick-start) · [Example](#example) · [Architecture](#architecture) · [AI stack](#ai-stack) · [How it compares](#how-it-compares) · [Integrations](#integrations) · [Install anywhere](#install-anywhere) · [Related](#related) · [Contributing](#contributing)
@@ -45,6 +51,42 @@ Identify true file types by magic bytes (beats extensions) — without standing 
 <div align="right"><a href="#top">↑ back to top</a></div>
 
 <a name="quick-start"></a>
+<!-- cognis:install:start -->
+## Install
+
+`magicid` is source-available (not published to PyPI) — every method below installs
+straight from GitHub. Pick whichever you prefer; the one-line scripts auto-detect
+the best tool available on your machine.
+
+**One-liner (Linux / macOS):**
+```sh
+curl -fsSL https://raw.githubusercontent.com/cognis-digital/magicid/HEAD/install.sh | sh
+```
+
+**One-liner (Windows PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/cognis-digital/magicid/HEAD/install.ps1 | iex
+```
+
+**Or install manually — any one of:**
+```sh
+pipx install "git+https://github.com/cognis-digital/magicid.git"     # isolated (recommended)
+uv tool install "git+https://github.com/cognis-digital/magicid.git"  # uv
+pip install "git+https://github.com/cognis-digital/magicid.git"      # pip
+```
+
+**From source:**
+```sh
+git clone https://github.com/cognis-digital/magicid.git
+cd magicid && pip install .
+```
+
+Then run:
+```sh
+magicid --help
+```
+<!-- cognis:install:end -->
+
 ## Quick start
 
 ```bash
