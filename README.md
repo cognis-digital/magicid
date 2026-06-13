@@ -20,6 +20,33 @@ pip install cognis-magicid
 magicid scan .            # → prioritized findings in seconds
 ```
 
+## Usage — step by step
+
+1. **Install** (Python 3.8+, stdlib only):
+   ```bash
+   pip install magicid
+   ```
+2. **Scan files** to identify their true type by magic bytes (catches extension spoofing):
+   ```bash
+   magicid scan uploads/*.png suspicious.pdf
+   ```
+   Exits `1` when findings exist (mismatch / unknown / unreadable), `0` when all consistent.
+3. **Recurse a directory tree**:
+   ```bash
+   magicid scan --recursive ./uploads
+   ```
+4. **Read the output as JSON or write an HTML report**:
+   ```bash
+   magicid --format json scan ./uploads | jq '.summary, .results[] | select(.severity=="high")'
+   magicid --format html --out report.html scan ./uploads
+   ```
+   JSON includes `summary` (high/medium/low/ok counts) and per-file `results[]`.
+5. **Gate an upload pipeline / CI** — block files whose real type contradicts their extension:
+   ```bash
+   magicid scan ./incoming/* || { echo "type-mismatch detected"; exit 1; }
+   ```
+
+
 ## Contents
 
 - [Why magicid?](#why) · [Features](#features) · [Quick start](#quick-start) · [Example](#example) · [Architecture](#architecture) · [AI stack](#ai-stack) · [How it compares](#how-it-compares) · [Integrations](#integrations) · [Install anywhere](#install-anywhere) · [Related](#related) · [Contributing](#contributing)
