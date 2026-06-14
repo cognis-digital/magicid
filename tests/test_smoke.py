@@ -151,5 +151,106 @@ class TestCli(unittest.TestCase):
             self.assertIn("<!DOCTYPE html>", f.read())
 
 
+class TestHardeningEdgeCases(unittest.TestCase):
+    """Tests for error-handling and edge-case paths added during hardening."""
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+
+    def _write(self, name, data):
+        path = os.path.join(self.tmp, name)
+        with open(path, "wb") as f:
+            f.write(data)
+        return path
+
+    # --- identify_bytes edge cases ----------------------------------------
+
+    def test_empty_bytes_returns_low(self):
+        """Empty buffer yields unknown / low severity — no crash."""
+        ident = identify_bytes(b"", path="empty.bin")
+        self.assertIsNone(ident.detected)
+        self.assertEqual(ident.severity, "low")
+        self.assertEqual(ident.head_hex, "")
+
+    def test_identify_bytes_no_path(self):
+        """identify_bytes with path=None must not raise and must not mismatch."""
+        ident = identify_bytes(PNG, path=None)
+        self.assertEqual(ident.detected_name, "PNG image")
+        self.assertFalse(ident.mismatch)  # no declared extension → no mismatch
+
+    # --- identify_file error paths ----------------------------------------
+
+    def test_identify_file_missing_path_raises_oserror(self):
+        """Non-existent path raises OSError (FileNotFoundError)."""
+        with self.assertRaises(OSError):
+            identify_file(os.path.join(self.tmp, "does_not_exist.png"))
+
+    def test_identify_file_directory_raises(self):
+        """Passing a directory to identify_file raises IsADirectoryError."""
+        with self.assertRaises((IsADirectoryError, OSError)):
+            identify_file(self.tmp)
+
+    # --- scan_paths error paths -------------------------------------------
+
+    def test_scan_nonexistent_path_returns_finding(self):
+        """scan_paths never raises; a missing path becomes a finding entry."""
+        ghost = os.path.join(self.tmp, "ghost.exe")
+        results = scan_paths([ghost])
+        self.assertEqual(len(results), 1)
+        self.assertTrue(results[0].findings)
+        self.assertEqual(results[0].severity, "low")
+
+    def test_scan_empty_paths_list(self):
+        """Calling scan_paths with an empty list returns an empty result."""
+        results = scan_paths([])
+        self.assertEqual(results, [])
+
+    def test_scan_empty_file_returns_low(self):
+        """A zero-byte file produces an unknown / low-severity result."""
+        path = self._write("empty.dat", b"")
+        results = scan_paths([path])
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].severity, "low")
+        self.assertIsNone(results[0].detected)
+
+    # --- CLI error paths --------------------------------------------------
+
+    def test_cli_scan_nonexistent_path_exits_1(self):
+        """scan with a path that does not exist returns exit-code 1 (findings present)."""
+        ghost = os.path.join(self.tmp, "ghost.bin")
+        rc = main(["scan", ghost])
+        self.assertEqual(rc, 1)
+
+    def test_cli_bad_out_dir_returns_2(self):
+        """--out with a missing parent directory returns exit-code 2."""
+        src = self._write("ok.png", PNG)
+        bad_out = os.path.join(self.tmp, "missing_subdir", "report.html")
+        rc = main(["scan", src, "--out", bad_out])
+        self.assertEqual(rc, 2)
+
+    # --- mcp_server helper -----------------------------------------------
+
+    def test_mcp_scan_to_json_empty_target(self):
+        """_scan_to_json with an empty string returns an error JSON, not a crash."""
+        from magicid.mcp_server import _scan_to_json
+        result = json.loads(_scan_to_json(""))
+        self.assertIn("error", result)
+
+    def test_mcp_scan_to_json_nonexistent(self):
+        """_scan_to_json with a non-existent path returns an error JSON."""
+        from magicid.mcp_server import _scan_to_json
+        result = json.loads(_scan_to_json("/no/such/path/file.bin"))
+        self.assertIn("error", result)
+
+    def test_mcp_scan_to_json_valid_file(self):
+        """_scan_to_json with a real file returns a JSON findings payload."""
+        from magicid.mcp_server import _scan_to_json
+        path = self._write("test.png", PNG)
+        result = json.loads(_scan_to_json(path))
+        self.assertIn("count", result)
+        self.assertIn("results", result)
+        self.assertEqual(result["count"], 1)
+
+
 if __name__ == "__main__":
     unittest.main()

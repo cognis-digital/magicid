@@ -261,40 +261,92 @@ def identify_bytes(head: bytes, path: Optional[str] = None,
 
 
 def identify_file(path: str) -> Identification:
-    """Identify a file on disk by reading its head bytes."""
+    """Identify a file on disk by reading its head bytes.
+
+    Raises ``OSError`` for unreadable files so that callers can decide
+    whether to skip or propagate.  Directories are never valid targets and
+    raise ``IsADirectoryError``.
+    """
+    if not isinstance(path, str) or not path:
+        raise ValueError(f"path must be a non-empty string, got {path!r}")
+    # os.path.getsize follows symlinks; if the target is a directory we get a
+    # misleading size, so guard explicitly before opening.
+    if os.path.isdir(path):
+        raise IsADirectoryError(f"is a directory, not a file: {path}")
     size = os.path.getsize(path)
     with open(path, "rb") as fh:
         head = fh.read(SNIFF_LEN)
     return identify_bytes(head, path=path, size=size)
 
 
-def _iter_files(paths: Iterable[str], recursive: bool) -> Iterable[str]:
+def _iter_files(paths: Iterable[str], recursive: bool) -> Iterable[tuple[str, str | None]]:
+    """Yield ``(file_path, error_or_None)`` pairs.
+
+    Directories are expanded; regular files are yielded as-is.
+    Paths that do not exist or are not accessible yield the path with an
+    error message so callers can report them cleanly rather than receiving
+    a raw OS exception later.
+    """
     for p in paths:
+        if not isinstance(p, str) or not p:
+            yield ("", "path must be a non-empty string")
+            continue
         if os.path.isdir(p):
             if recursive:
                 for root, _dirs, files in os.walk(p):
                     for name in sorted(files):
-                        yield os.path.join(root, name)
+                        yield (os.path.join(root, name), None)
             else:
-                for name in sorted(os.listdir(p)):
+                try:
+                    names = sorted(os.listdir(p))
+                except OSError as exc:
+                    yield (p, f"Cannot list directory: {exc}")
+                    continue
+                for name in names:
                     full = os.path.join(p, name)
                     if os.path.isfile(full):
-                        yield full
+                        yield (full, None)
+        elif os.path.exists(p):
+            yield (p, None)
         else:
-            yield p
+            yield (p, f"Path does not exist: {p}")
 
 
 def scan_paths(paths: Iterable[str], recursive: bool = False) -> list[Identification]:
-    """Identify every file under the given paths."""
+    """Identify every file under the given paths.
+
+    Never raises — all errors (missing paths, permission denied, unexpected
+    OS-level failures) are captured as ``Identification`` entries with a
+    finding that describes the problem.
+    """
     results: list[Identification] = []
-    for path in _iter_files(paths, recursive):
+    for path, pre_error in _iter_files(paths, recursive):
+        if pre_error is not None:
+            ident = Identification(
+                path=path or None,
+                size=None,
+                declared_ext=_normalize_ext(path) if path else "",
+                detected=None,
+                head_hex="",
+            )
+            ident.findings.append(pre_error)
+            results.append(ident)
+            continue
         try:
             results.append(identify_file(path))
-        except OSError as exc:
+        except (OSError, ValueError) as exc:
             ident = Identification(
                 path=path, size=None, declared_ext=_normalize_ext(path),
                 detected=None, head_hex="",
             )
             ident.findings.append(f"Could not read file: {exc}")
+            results.append(ident)
+        except Exception as exc:  # noqa: BLE001
+            # Unexpected error (e.g. MemoryError on a huge file); report and continue.
+            ident = Identification(
+                path=path, size=None, declared_ext=_normalize_ext(path),
+                detected=None, head_hex="",
+            )
+            ident.findings.append(f"Unexpected error reading file: {type(exc).__name__}: {exc}")
             results.append(ident)
     return results
