@@ -34,3 +34,6 @@ magicid = "magicid.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["magicid"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
