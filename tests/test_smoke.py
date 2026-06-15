@@ -252,5 +252,55 @@ class TestHardeningEdgeCases(unittest.TestCase):
         self.assertEqual(result["count"], 1)
 
 
+class TestWebhook(unittest.TestCase):
+    """Tests for integrations/webhook.py input validation (no network calls)."""
+
+    def _run(self, argv, stdin=""):
+        """Call webhook main() with controlled argv and stdin."""
+        import io
+        import sys
+        from integrations.webhook import main as webhook_main
+
+        old_stdin = sys.stdin
+        sys.stdin = io.StringIO(stdin)
+        try:
+            return webhook_main(argv)
+        finally:
+            sys.stdin = old_stdin
+
+    def test_missing_scheme_returns_2(self):
+        """A URL without http/https scheme must be rejected with exit code 2."""
+        rc = self._run(["--url", "ftp://example.com/hook"])
+        self.assertEqual(rc, 2)
+
+    def test_empty_url_returns_2(self):
+        """An empty URL must be rejected with exit code 2."""
+        rc = self._run(["--url", "   "])
+        self.assertEqual(rc, 2)
+
+    def test_empty_stdin_returns_2(self):
+        """Empty stdin (nothing to post) must return exit code 2, not crash."""
+        rc = self._run(["--url", "https://example.com/hook"], stdin="   ")
+        self.assertEqual(rc, 2)
+
+    def test_invalid_json_stdin_returns_2(self):
+        """Non-JSON stdin must be rejected with exit code 2 before any network call."""
+        rc = self._run(["--url", "https://example.com/hook"], stdin="{not valid json}")
+        self.assertEqual(rc, 2)
+
+    def test_malformed_header_returns_2(self):
+        """A --header value with no key must return exit code 2."""
+        rc = self._run(
+            ["--url", "https://example.com/hook", "--header", ":bad"],
+            stdin='{"ok": true}',
+        )
+        self.assertEqual(rc, 2)
+
+    def test_url_missing_host_returns_2(self):
+        """A URL with scheme but no host must be rejected."""
+        rc = self._run(["--url", "https:///path"])
+        self.assertEqual(rc, 2)
+
+
 if __name__ == "__main__":
     unittest.main()

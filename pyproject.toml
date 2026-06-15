@@ -32,3 +32,13 @@ magicid = "magicid.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["magicid"]
+
+[tool.ruff]
+# HTML/CSS template strings and long error messages push past 88; use 120.
+line-length = 120
+
+[tool.ruff.lint]
+select = ["F", "E"]
+# E501 inside multi-line HTML f-string literals cannot be shortened without
+# changing the rendered output, so we suppress it project-wide.
+ignore = ["E501"]
