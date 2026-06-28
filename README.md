@@ -20,6 +20,67 @@ pip install cognis-magicid
 magicid scan .            # → prioritized findings in seconds
 ```
 
+
+<!-- cognis:example:start -->
+## 🔎 Example output
+
+Real, reproducible output from the tool — runs offline:
+
+```console
+$ magicid-emit --version
+magicid 0.1.0
+```
+
+```console
+$ magicid-emit --help
+usage: magicid [-h] [--version] {scan} ...
+
+Identify true file types by magic bytes (beats extensions).
+
+positional arguments:
+  {scan}
+    scan      Identify true file types of PATH(s).
+
+options:
+  -h, --help  show this help message and exit
+  --version   show program's version number and exit
+```
+
+> Blocks above are real `magicid` output — reproduce them from a clone.
+
+**Sample result format** _(illustrative values — run on your own data for real findings):_
+
+```
+{
+"magicid": {
+"platform": "stix",
+"findings": [
+{
+"id": "1234567890abcdef",
+"created_by_ref": "user1",
+"created_at": "2023-02-15T14:30:00Z",
+"name": "Suspicious Network Traffic",
+"description": "Network traffic anomaly detected",
+"labels": ["network", "suspicious"],
+"objects": [
+{
+"id": "object1",
+"type": "indicator",
+"value": "192.168.1.100"
+},
+{
+"id": "object2",
+"type": "observable",
+"value": "tcp/12345"
+}
+]
+}
+]
+}
+```
+
+<!-- cognis:example:end -->
+
 ## Usage — step by step
 
 1. **Install** (Python 3.8+, stdlib only):

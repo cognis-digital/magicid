@@ -1,0 +1,3 @@
+$ magicid-emit --version
+
+magicid 0.1.0

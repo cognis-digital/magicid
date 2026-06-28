@@ -1,0 +1,13 @@
+$ magicid-emit --help
+
+usage: magicid [-h] [--version] {scan} ...
+
+Identify true file types by magic bytes (beats extensions).
+
+positional arguments:
+  {scan}
+    scan      Identify true file types of PATH(s).
+
+options:
+  -h, --help  show this help message and exit
+  --version   show program's version number and exit
